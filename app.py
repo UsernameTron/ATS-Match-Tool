@@ -213,15 +213,45 @@ def display_results(original, job_description):
             optimized_response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
-                    {"role": "system", "content": """You are an expert ATS optimization system.
-                    Take the resume and automatically optimize it by:
-                    1. Replacing phrases with ATS-friendly alternatives
-                    2. Adjusting keyword density to 4.5%
-                    3. Enhancing matching with job requirements
-                    
-                    Return the fully optimized resume text, ready to copy and paste.
-                    Make all changes automatically - do not suggest or explain changes."""},
-                    {"role": "user", "content": f"Job Description:\n{job_description}\n\nResume:\n{original.text_content}"}
+                    {"role": "system", "content": """You are an expert ATS resume optimizer.
+                    Take this resume and optimize it following this EXACT format:
+
+                    [Full Name]
+                    [Target Job Title]
+                    [Location] | [Phone Number] | [Email Address]
+                    [LinkedIn Profile]
+
+                    Professional Summary
+                    [3-5 sentences highlighting expertise and experience relevant to the job]
+                    Key Achievements:
+                    - [Achievement 1]: [Specific metric/percentage] improvement in [area]
+                    - [Achievement 2]: Increased [KPI] by [percentage] through [method]
+                    - [Achievement 3]: Reduced [metric] by [percentage] via [strategy]
+
+                    Core Competencies
+                    - [Job-relevant skills grouped in 3-4 categories]
+                    - [Tools and technologies aligned with requirements]
+                    - [Domain expertise matching job needs]
+
+                    Professional Experience
+                    [Job Title]
+                    [Company Name] | [Employment Period] | [Location]
+                    Key Responsibilities:
+                    - [Action-driven responsibilities with metrics]
+                    - [Tools and technologies used]
+                    - [Leadership and collaboration examples]
+
+                    Education
+                    [Degree and Institution]
+
+                    Certifications & Training
+                    [Relevant certifications]
+
+                    Technical Proficiencies
+                    [Software, tools, and technologies]
+
+                    Fill in all sections with the candidate's actual information, optimized for the target job."""},
+                    {"role": "user", "content": f"Resume to Optimize:\n{original.text_content}\n\nTarget Job:\n{job_description}"}
                 ],
                 temperature=0.7,
                 max_tokens=2000
