@@ -383,68 +383,10 @@ class EnhancedAnalyzer:
         return scores
 
     def _calibrate_weights(self):
-        """Analyze job descriptions to determine accurate category weights"""
-        try:
-            logger.info("Starting weight calibration...")
-            # Print current directory and files for debugging
-            logger.info(f"Current directory: {os.getcwd()}")
-            logger.info(f"Available files: {os.listdir()}")
-            
-            total_weights = {
-                'technical': 0,
-                'leadership': 0,
-                'customer_service': 0,
-                'operations': 0
-            }
-            job_count = 0
-            
-            for csv_file in ['Generated_Job_Descriptions.csv', 'Generated_Job_Descriptions (1).csv', 'Generated_Job_Descriptions (3).csv']:
-                logger.info(f"Processing file: {csv_file}")
-                try:
-                    df = pd.read_csv(csv_file)
-                    logger.info(f"Columns in {csv_file}: {df.columns.tolist()}")
-                    current_jobs = len(df)
-                    job_count += current_jobs
-                    logger.info(f"Loaded {current_jobs} jobs from {csv_file}")
-                    
-                    for idx, row in df.iterrows():
-                        text = ' '.join([
-                            str(row['Description']), 
-                            str(row['Key Responsibilities']), 
-                            str(row['Skills Required'])
-                        ]).lower()
-                        
-                        # Log sample of text being analyzed
-                        if idx == 0:
-                            logger.info(f"Sample text being analyzed: {text[:200]}...")
-                        
-                        # Count and log category matches
-                        for category, terms in {
-                            'technical': ['ai', 'machine learning', 'analytics', 'data'],
-                            'leadership': ['lead', 'manage', 'director'],
-                            'customer_service': ['customer', 'cx', 'service'],
-                            'operations': ['operations', 'process', 'efficiency']
-                        }.items():
-                            if any(term in text for term in terms):
-                                total_weights[category] += 1
-                                
-                except Exception as e:
-                    logger.error(f"Error processing {csv_file}: {str(e)}")
-                    continue
-            
-            if job_count > 0:
-                weights = {k: v/job_count for k, v in total_weights.items()}
-                logger.info(f"Final calibrated weights (from {job_count} jobs): {weights}")
-                return weights
-            else:
-                logger.warning("No jobs processed, using default weights")
-                return {
-                    'technical': 0.25,
-                    'leadership': 0.30,
-                    'customer_service': 0.25,
-                    'operations': 0.20
-                }
-            
-        except Exception as e:
-            logger.error(f"Error calibrating weights: {str(e)}")
-            return None
+        """Return default weights for analysis"""
+        return {
+            'technical': 0.25,
+            'leadership': 0.30,
+            'customer_service': 0.25,
+            'operations': 0.20
+        }
