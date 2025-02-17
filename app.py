@@ -85,7 +85,18 @@ o Customer Experience Roadmaps
 o Retention Strategies
 o Digital Transformation Initiatives
 
-[... rest of resume content ...]"""
+Professional Experience:
+Director of Customer Experience, TechCorp Inc. (2020-Present)
+- Led implementation of AI-driven customer experience initiatives
+- Increased NPS by 20% through VoC program optimization
+- Managed team of 12 CX specialists
+
+Senior Customer Success Manager, AI Solutions Ltd. (2018-2020)
+- Developed predictive analytics dashboard for customer health
+- Reduced churn by 15% through proactive engagement
+- Implemented Salesforce automation workflows
+
+[Add complete work history here]"""
 
 # Add caching for OpenAI responses
 @lru_cache(maxsize=32)
@@ -193,40 +204,42 @@ def display_results(original, job_description):
             for area in original.improvement_areas:
                 st.markdown(f"- {area}")
             
-        # Add optimization section
+        # Add optimization section with clear separation
         st.divider()
-        st.subheader("📝 Optimized Resume")
+        st.header("🔄 Resume Optimization")
         
-        # Get optimized version using OpenAI
-        optimized_response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": """You are an expert resume optimizer. 
-                Enhance this resume to better match the job description while:
-                1. Maintaining authenticity of experience
-                2. Targeting 90% ATS match score
-                3. Keeping keyword density below 4.5%
-                4. Preserving the original format
-                
-                Return only the optimized resume text."""},
-                {"role": "user", "content": f"Job Description:\n{job_description}\n\nOriginal Resume:\n{original.text_content}"}
-            ],
-            temperature=0.7
-        )
-        
-        # Show optimized resume in a copyable text area
-        optimized_text = optimized_response.choices[0].message.content
-        st.text_area("Optimized Resume (Copy from here)", optimized_text, height=400)
-        
-        # Show optimization improvements
-        st.markdown("### ✨ Optimization Changes")
-        st.markdown("- Adjusted keyword density to optimal level")
-        st.markdown("- Enhanced role descriptions to better match requirements")
-        st.markdown("- Aligned skills section with job requirements")
-        
+        with st.spinner("Optimizing resume..."):
+            # Get optimized version using OpenAI
+            optimized_response = client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": """You are an expert ATS optimization system.
+                    Take the resume and automatically optimize it by:
+                    1. Replacing phrases with ATS-friendly alternatives
+                    2. Adjusting keyword density to 4.5%
+                    3. Enhancing matching with job requirements
+                    
+                    Return the fully optimized resume text, ready to copy and paste.
+                    Make all changes automatically - do not suggest or explain changes."""},
+                    {"role": "user", "content": f"Job Description:\n{job_description}\n\nResume:\n{original.text_content}"}
+                ],
+                temperature=0.7,
+                max_tokens=2000
+            )
+            
+            # Show optimized resume in a copyable text area
+            optimized_text = optimized_response.choices[0].message.content
+            st.text_area("📋 Optimized Resume (Copy from here)", optimized_text, height=400)
+            
+            # Show optimization improvements
+            st.subheader("✨ Optimization Changes Made")
+            st.markdown("- Adjusted keyword density to optimal level")
+            st.markdown("- Enhanced role descriptions to better match requirements")
+            st.markdown("- Aligned skills section with job requirements")
+
     except Exception as e:
-        logger.error(f"Error displaying results: {str(e)}")
-        st.error("Error analyzing requirements. Please try again.")
+        logger.error(f"Error in optimization: {str(e)}")
+        st.error("Error generating optimized resume. Please try again.")
 
 if __name__ == "__main__":
     main() 
